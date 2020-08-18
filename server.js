@@ -82,6 +82,13 @@ function onAuthorizeFail(data, message, error, accept){
     io.emit('user', {name: socket.request.user.name, currentUsers, connected: false});
    });
     
+   /*socket.on('chat message', function(message) {      
+        io.emit('chat message', {name: socket.request.user.name, message:message});
+   });*/
+    socket.on('chat message', (message) => {
+        io.emit('chat message', {name: socket.request.user.name, message});
+      });
+    
   });
   
 
