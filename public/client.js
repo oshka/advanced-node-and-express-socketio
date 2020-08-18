@@ -15,13 +15,18 @@ var socket = io();
 
   
   // Form submittion with new message in field with id 'm'
-  $('form').submit(function(){
+  $('form').submit(function(){    
     var messageToSend = $('#m').val();
-    //send message to server here?
+    socket.emit('chat message', messageToSend);
+    //send message to server here?  
     $('#m').val('');
     return false; // prevent form submit from refreshing page
   });
   
-  
+  socket.on('chat message', function(data){
+       console.log('data form server');
+       console.log(data);
+       $('#messages').append($('<li>').html('<b>'+ data.name +'<\/b>: '+data.message));
+     });
   
 });
