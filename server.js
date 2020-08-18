@@ -74,12 +74,12 @@ function onAuthorizeFail(data, message, error, accept){
     
     console.log('A user has connected');
     ++currentUsers;
-    io.emit('user count', {'currentUsers':currentUsers,'username':socket.request.user.name});
+    io.emit('user', {name: socket.request.user.name, currentUsers, connected: true});
     
     socket.on('disconnect', function() {
       console.log('Got disconnect!');
     --currentUsers;
-    io.emit('user count', currentUsers);
+    io.emit('user', {name: socket.request.user.name, currentUsers, connected: false});
    });
     
   });
