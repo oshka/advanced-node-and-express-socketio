@@ -13,8 +13,10 @@ const app         = express();
 const http        = require('http').Server(app);
 const sessionStore= new session.MemoryStore();
 const io = require('socket.io')(http);
-
 const cors       = require('cors');
+
+var currentUsers = 0;
+
 app.use(cors());
 
 fccTesting(app); //For FCC testing purposes
@@ -34,9 +36,10 @@ app.use(session({
 }));
 
 
-mongo.connect(process.env.DATABASE, (err, db) => {
+mongo.connect(process.env.DATABASE, (err, client) => {
     if(err) console.log('Database error: ' + err);
-  
+    
+  let db = client.db('advancednodesocketio');
     auth(app, db);
     routes(app, db);
       
@@ -46,6 +49,9 @@ mongo.connect(process.env.DATABASE, (err, db) => {
     //start socket.io code  
   io.on('connection', socket => {
     console.log('A user has connected');
+    ++currentUsers;
+    io.emit('user count', currentUsers);
+
   });
   
 

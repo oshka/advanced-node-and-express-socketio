@@ -24,7 +24,7 @@ module.exports = function (app, db) {
     passport.use(new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: "https://buttercup-delete.gomix.me/auth/github/callback"
+        callbackURL: "https://advanced-node-and-express-socketio-oshka.glitch.me/auth/github/callback"
       },
       function(accessToken, refreshToken, profile, cb) {
           db.collection('chatusers').findAndModify(
@@ -33,8 +33,10 @@ module.exports = function (app, db) {
               {$setOnInsert:{
                   id: profile.id,
                   name: profile.displayName || 'Anonymous',
-                  photo: profile.photos[0].value || '',
-                  email: profile.emails[0].value || 'No public email',
+                  photo: (typeof profile.photos !== 'undefined' && profile.photos) ? profile.photos[0].value : '',
+                  email: (typeof profile.emails !== 'undefined' && profile.emails)?profile.emails[0].value : 'No public email', 
+                  //photo: profile.photos[0].value || '',
+                  //email: profile.emails[0].value || 'No public email',
                   created_on: new Date(),
                   provider: profile.provider || '',
                   chat_messages: 0
